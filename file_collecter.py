@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def collect_files():
     #Ask the user for a folder path
@@ -9,7 +10,7 @@ def collect_files():
     #Defining target file extensions
     target_extensions = ['.txt', '.docx', '.jpg']
     found_files = []
-    log_file_name = "files.log"
+
 
     #Loop until a valid directory is entered
     while True:
@@ -22,8 +23,14 @@ def collect_files():
             break  # Exit loop if path is valid
 
         except ValueError as e:
-            print(f"[!] Error: {e}")
+            print(f"Error: {e}")
             print("Please try again with the correct.\n")
+
+#Creating staging folder to copy found files into
+    staging_folder = "staged_files"
+    if not os.path.exists(staging_folder):
+        os.makedirs(staging_folder)
+
 
     #Start scanning
     print("\nScanning...\n")
@@ -33,20 +40,21 @@ def collect_files():
             file_ext = os.path.splitext(file)[1].lower()
             if file_ext in target_extensions:
                 full_path = os.path.join(root, file)
-                print(full_path)
-                found_files.append(full_path)
+                print(f"Found: {full_path}")
 
-    #Write results to a log file
-    with open(log_file_name, "w") as log_file:
-        for file_path in found_files:
-            log_file.write(file_path + "\n")
+                #Copy files found to staging folder
+                try:
+                    dest_path = os.path.join(staging_folder, os.path.basename(full_path))
+                    shutil.copy2(full_path, dest_path)  #preserve metadata
+                    found_files.append(dest_path)
+                except Exception as e:
+                    print(f"Failed to copy {full_path}: {e}")
 
-    #Outputs Results
-    print("\nScan complete.")
-    print(f"Total files found: {len(found_files)}")
-    print(f"Results saved to: {log_file_name}")
-
+    print(f"\nScan complete. {len(found_files)} files copied to '{staging_folder}'.")
     return found_files
 
-collect_files()
+if __name__ == "__main__":
+    collect_files()
+
+
 
